@@ -1,0 +1,12 @@
+# version of docker-compose
+version: '3'
+services:
+    # container name
+    mysql:
+        image: mysql
+        ports:
+            - 3306:3306
+        volumes:
+            - ~/Projects/golang/coursera/server_side_dev_with_golang/data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=Kg2%W!&.6&LV

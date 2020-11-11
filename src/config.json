@@ -1,0 +1,13 @@
+{
+    "db_driver": "mysql",
+    "db_host": "127.0.0.1",
+    "db_port": "3306",
+    "db_user": "root",
+    "db_passwd": "Kg2%W!&.6&LV",
+    "db_name": "confusion",
+    "base_dir": "/home/dev/Projects/server_side_dev_with_golang/src",
+    "public_images_dir": "/home/bwoo/Projects/server_side_dev_with_golang/public/images",
+    "oauth2_fb_client_id": "123456789012345",
+    "oauth2_fb_client_secret": "12345678901234567890123456789012",
+    "oauth2_fb_redirect_url": "https://localhost:3443/facebook/callback"
+}
