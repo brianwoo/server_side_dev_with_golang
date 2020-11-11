@@ -1,5 +1,8 @@
 theme: jekyll-theme-cayman
+markdown: kramdown
 highlighter: rouge
 kramdown:
-  math_engine: mathjax
-  syntax_highlighter: rouge
+  input: GFM
+  syntax_highlighter_opts:
+    default_lang: go
+    css_class   : 'syntax'
