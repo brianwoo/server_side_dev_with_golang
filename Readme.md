@@ -5,7 +5,7 @@ GoLang is a great programming language in building a Web API project. To illustr
 
 To acheive that goal, I went back to one of the courses that I previously took, Server-side Development with NodeJS, Express and MongoDB, offered by Coursera / Hong Kong University of Science and Technology. I decided to reimplement all the functionality taught in the course in GoLang and MySQL.
 
-This article explains how to these features can be implemented ([Git Repo](https://)).
+This article explains how to these features can be implemented ([Git Repo](https://github.com/brianwoo/server_side_dev_with_golang)).
 
 ## List of Examples
 - Implementing REST API: GET, POST, PUT and DELETE
