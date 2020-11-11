@@ -560,7 +560,8 @@ func loginWithFacebookToken(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	resp, err := http.Get("https://graph.facebook.com/me?fields=id,name,first_name,last_name,email&access_token=" +
+	resp, err := http.Get(
+        "https://graph.facebook.com/me?fields=id,name,first_name,last_name,email&access_token=" +
 		url.QueryEscape(accessToken))
 	if resp.StatusCode >= http.StatusBadRequest {
 		fmt.Println("Unable to login to Facebook")
