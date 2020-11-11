@@ -47,7 +47,7 @@ To start off, GoLang provides a router module in its stdlib, but I decided to us
 Setting up routing is quite simple, you need to setup three things: HTTP Method, a URL and a handler method.
 
 Resource ID can be specified by adding a colon before a variable (we have :dishId in this example).
-```
+```go
 func SetupRoutes(router *httprouter.Router) {
 
 	// dish
@@ -65,7 +65,7 @@ func SetupRoutes(router *httprouter.Router) {
 ```
 
 A httprouter handler interface looks very much like the handler interface, except the httprouter handler takes an extra parameter ps (third param). To get the dishId resource ID, we can use the method ps.ByName().
-```
+```go
 func deleteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
     // The :dishId specified in the routing
@@ -96,7 +96,7 @@ func deleteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 ## Setting up database connection
 
 The database connection setup is database specific. The following example is for MySQL.
-```
+```go
 var DbConn *sql.DB
 
 func SetupDatabase(config config.Config) {
@@ -119,7 +119,7 @@ func SetupDatabase(config config.Config) {
 
 Here is an example of a getting a dish from the database. The QueryRowContext() function takes a prepared statement and a list of values as parameters. After the query is done, the Scan() function extracts the values from the row result.
 
-```
+```go
 func getDishFromDb(dishId int64) (*Dish, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -163,7 +163,7 @@ func getDishFromDb(dishId int64) (*Dish, error) {
 ## Implementing Database CRUD methods (with transaction)
 
 There are situations where you might need transaction support when doing INSERT. To insert a record with transaction, we will need to use sql.Tx.ExecContext(), instead of sql.DB.ExecContext().  Fortunately, both ExecContext() methods have the same method signature. For example, we can have a method to return either method:
-```
+```go
 func getExecContextFunc(tx *sql.Tx) func(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
 
 	if tx != nil {
@@ -179,7 +179,7 @@ func getExecContextFunc(tx *sql.Tx) func(ctx context.Context, query string, args
 ```
 
 To avoid duplicating the insert logic, we can extract a shared function createFavoriteDishInDbInternal() to handle both transaction and non-transaction inserts.
-```
+```go
 func createFavoriteDishInDbInternal(tx *sql.Tx, ctx context.Context, userId, dishId int64) (*misc.Status, error) {
 
 	status := &misc.Status{NumOfRowsAffected: 0, IsOk: 0}
@@ -205,7 +205,7 @@ func createFavoriteDishInDbInternal(tx *sql.Tx, ctx context.Context, userId, dis
 ```
 
 Implementing transaction is relatively straight forward. It begin with BeginTx() and to commit, call tx.Commit(). We can rollback the insert by calling tx.Rollback(). In the following example, we do not commit unless all records have been inserted successfully.
-```
+```go
 func createFavoriteDishesInDb(userId int64, favDishes favoriteDishes) (*misc.Status, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -241,7 +241,7 @@ func createFavoriteDishesInDb(userId int64, favDishes favoriteDishes) (*misc.Sta
 ```
 
 As for inserting only one single dish at a time, we can reuse the same logic without using transaction.
-```
+```go
 func createFavoriteDishInDb(userId, dishId int64) (*misc.Status, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -255,7 +255,7 @@ func createFavoriteDishInDb(userId, dishId int64) (*misc.Status, error) {
 
 The dgrijalva/jwt-go provides a simple way to generate and validate JWTs. In this example, we will extract a JWT token, stored in the Authorization field in the header:
 
-```
+```go
 func GetJwtTokenFromRequest(r *http.Request) (string, error) {
 
 	// header is a string: KEY: Authorization VALUE: Bearer tokenstringInBase64
@@ -276,7 +276,7 @@ You can find out more about JWT from [this article](https://dzone.com/articles/w
 
 ### Validating JWTs
 A JWT token can be validated by looking at the token.Valid attribute.
-```
+```go
 func validateToken(jwtToken string) (claims, bool) {
 
 	claims := &claims{}
@@ -296,7 +296,7 @@ func validateToken(jwtToken string) (claims, bool) {
 }
 ```
 To put this all together, we have a verifyUser() function which acts as a middleware function. This middleware function validates the user and if the user has a valid token, the next() function will be called along with claims.  This next() function is the auth.VerifyAdmin() function as you will see below.
-```
+```go
 func VerifyUser(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
@@ -320,13 +320,13 @@ func VerifyUser(next httprouter.Handle) httprouter.Handle {
 ```
 
 Middleware functions are usually chained together for validation.  For example, we can chain Cors() --> VerifyUser() --> VerifyAdmin() together and execute them sequentially before calling putPromotions(). If VerifyUser() fails, it will return and VerifyAdmin() and putPromotions() will NOT be called.
-```
+```go
 router.PUT("/promotions", cors.Cors(auth.VerifyUser(auth.VerifyAdmin(putPromotions))))
 ```
 
 ### Generating JWTs
 The jwt-go module also provides convenient support of generating JWTs. The information stored inside the Claims can be defined as a struct, along with the jwt.StandardClaims which includes an expiry time.
-```
+```go
 type claims struct {
 	UserId string `json:"_id"`
 	Admin  bool   `json:"admin"`
@@ -350,7 +350,7 @@ func (claims *claims) generateTokenStringForUser() (string, error) {
 
 ## Setting up HTTPS
 In this project, we expose both HTTP (port 3000) and HTTPS (port 3443) to the consumers, however, to make it more secure, when an HTTP connection is made to the server, the connect will be redirected to HTTPS to ensure the communication is secure.
-```
+```go
 func listenOnInsecurePortAndRedirect() {
 
 	log.Println("Server starting. Listening on " + serverListenPort)
@@ -386,7 +386,7 @@ File Upload and download are functionality commonly used on a web server. The fo
 ### Uploading a File
 In this example, we have an handler which can save an uploaded file to disk.  Please note that handler.Filename should be sanitized before passing to filepath.Join() to prevent security attacks. 
 
-```
+```go
 func postImageUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	r.ParseMultipartForm(5 * 1024 * 1024) // 5MB
@@ -423,7 +423,7 @@ func postImageUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 ### Downloading a File
 We have the getImage() function to handle image file download from the filesystem. Again, please note that filename should be sanitized before passing to filepath.Join() to prevent security attacks.
-```
+```go
 func getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	fileName := ps.ByName("imageName")
@@ -460,7 +460,7 @@ func getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 As for implementing CORS, the httprouter provides a convenient option to handle HTTP OPTIONS requests. router.GlobalOPTIONS can be setup as a default handler for handling pre-flight requests to the webservice.
 
-```
+```go
 func setupDefaultHttpOptions(router *httprouter.Router) {
 	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -489,7 +489,7 @@ func setAccessControlAllowOriginIfValid(rHeader http.Header, wHeader http.Header
 ```
 
 Similarly, the Cors() function can be setup as a middleware method to handle PUT, POST & DELETE requests.
-```
+```go
 func Cors(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
@@ -514,7 +514,7 @@ A regular OAuth2 Facebook Login workflow would involve a client logging in to Fa
 
 It is recommended to setup a random character string in the login request and to validate that string in the callback. We can accomplish that with a state cookie.
 
-```
+```go
 var facebookConfig *oauth2.Config
 
 func loginFacebook(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -551,7 +551,7 @@ func facebookLoginCallback(w http.ResponseWriter, r *http.Request, ps httprouter
 ```
 
 Once we have an access token, a user can login to our system using this token. With this token, we have the ability to access the user's Facebook profile. In our example, we create a new local user if this user is not found in our database; otherwise, we validate the user's Facebook ID and return a new JWT token.
-```
+```go
 func loginWithFacebookToken(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	accessToken, err := getAccessToken(r, ps)
