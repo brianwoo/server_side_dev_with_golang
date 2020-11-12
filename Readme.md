@@ -380,7 +380,7 @@ func listenOnSecurePort(router *httprouter.Router) {
 }
 ```
 
-## Uploading / Downloading files
+## Uploading / Downloading Files
 File Upload and download are functionality commonly used on a web server. The following examples are to illustrate how to implement these features using GoLang.
 
 ### Uploading a File
@@ -505,7 +505,7 @@ func Cors(next httprouter.Handle) httprouter.Handle {
 }
 ```
 
-## Implementing OAuth2 with Facebook as an alternative way to login
+## Implementing OAuth2 with Facebook as an Alternative Way to Login
 One of the popular ways to login these days is to use one of your social media accounts. In this project, we have also explored this option and we allow a user to login with his regular username and password or Facebook login as an alternative. In order to login via Facebook, we will have to use Facebook's OAuth2. Fortunately, GoLang provides that functionality.
 
 To use Facebook's OAuth2, you will first need to setup a an app ([instructions](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par)) through the [Facebook Developer Portal](https://developers.facebook.com/).  
