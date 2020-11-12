@@ -1,11 +1,11 @@
 # Building a Web API Project with GoLang (Examples)
 
 ## Introduction
-GoLang is a great programming language for building a Web API projects. To demonstrate the power of GoLang, I wanted to build a sample Web API project which contains some of the commonly used features.
+GoLang is a great programming language for building Web API projects. To demonstrate the power of GoLang, I wanted to build a sample Web API project which contains some of the commonly used features.
 
 To get an idea of the features to be included in the project, I went back to one of the courses that I previously took, [Server-side Development with NodeJS, Express and MongoDB](https://www.coursera.org/learn/server-side-nodejs), offered by Coursera / Hong Kong University of Science and Technology. I decided to implement all the functionality taught in the course with GoLang and MySQL.
 
-This article provide a number of examples on how these features can be implemented ([Git Repo](https://github.com/brianwoo/server_side_dev_with_golang)).
+This article provides a number of examples on how these features can be implemented ([Git Repo](https://github.com/brianwoo/server_side_dev_with_golang)).
 
 ## List of Examples
 - Implementing basic REST API
@@ -64,7 +64,7 @@ func SetupRoutes(router *httprouter.Router) {
 }
 ```
 
-A httprouter handler interface looks very much like the GoLang's http handler interface, except the httprouter handler takes an extra parameter ps (third param). To get the dishId resource ID, we can use the method ps.ByName().
+A httprouter handler interface looks very much like GoLang's http handler interface, except the httprouter handler takes an extra parameter ps (third param). To get the dishId resource ID, we can use the method ps.ByName().
 ```go
 func deleteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
@@ -117,7 +117,7 @@ func SetupDatabase(config config.Config) {
 
 ## Implementing Database CRUD Functions
 
-Here is an example of a getting data from the database. The QueryRowContext() function takes a prepared statement and a list of values as parameters. After the query is done, the Scan() function extracts the values from the row result.
+Here is an example of getting data from the database. The QueryRowContext() function takes a prepared statement and a list of values as parameters. After the query is done, the Scan() function extracts the values from the row result.
 
 ```go
 func getDishFromDb(dishId int64) (*Dish, error) {
@@ -162,7 +162,7 @@ func getDishFromDb(dishId int64) (*Dish, error) {
 
 ## Implementing Database CRUD Functions (with transaction)
 
-There are situations where you might need transaction support when doing multiple INSERTs. To insert a record with transaction, we will need to use sql.Tx.ExecContext(), instead of sql.DB.ExecContext().  Fortunately, both ExecContext() functions have the same function signature and we can have setup a function to return either ExecContext() function:
+There are situations where you might need transaction support when doing multiple INSERTs. To insert a record with a transaction, we will need to use sql.Tx.ExecContext(), instead of sql.DB.ExecContext().  Fortunately, both ExecContext() functions have the same function signature and we can have setup a function to return either ExecContext() function:
 ```go
 func getExecContextFunc(tx *sql.Tx) func(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
 
@@ -178,7 +178,7 @@ func getExecContextFunc(tx *sql.Tx) func(ctx context.Context, query string, args
 }
 ```
 
-To avoid duplicating the insert logic, we can extract a shared logic in a separate function createFavoriteDishInDbInternal() to handle both transaction and non-transaction inserts.
+To avoid duplicating the insert logic, we can extract a shared logic in a separate function createFavoriteDishInDbInternal() to handle both transactional and non-transactional inserts.
 ```go
 func createFavoriteDishInDbInternal(tx *sql.Tx, ctx context.Context, userId, dishId int64) (*misc.Status, error) {
 
@@ -204,7 +204,7 @@ func createFavoriteDishInDbInternal(tx *sql.Tx, ctx context.Context, userId, dis
 }
 ```
 
-Implementing transaction is relatively straight forward. It starts with BeginTx() to begin a transaction and tx.Commit() to commit. When needed, we can rollback the insert by calling tx.Rollback(). In the following example, we do not commit unless all records have been inserted successfully.
+Implementing a transaction is relatively straightforward. It starts with BeginTx() to begin a transaction and tx.Commit() to commit. When needed, we can rollback the insert by calling tx.Rollback(). In the following example, we do not commit unless all records have been inserted successfully.
 ```go
 func createFavoriteDishesInDb(userId int64, favDishes favoriteDishes) (*misc.Status, error) {
 
@@ -325,7 +325,7 @@ router.PUT("/promotions", cors.Cors(auth.VerifyUser(auth.VerifyAdmin(putPromotio
 ```
 
 ### Generating JWTs
-The jwt-go module also provides convenient way of generating JWTs. The information stored inside the Claims can be defined as a struct, along with the jwt.StandardClaims which includes an expiry time. A new JWT token can be generated with calling the jwt.NewWithClaims() function.
+The jwt-go module also provides a convenient way of generating JWTs. The information stored inside the Claims can be defined as a struct, along with the jwt.StandardClaims which includes an expiry time. A new JWT token can be generated by calling the jwt.NewWithClaims() function.
 ```go
 type claims struct {
 	UserId string `json:"_id"`
@@ -384,7 +384,7 @@ func listenOnSecurePort(router *httprouter.Router) {
 File Upload and download are functionality commonly used on a web server. The following examples are to illustrate how to implement these features using GoLang.
 
 ### Uploading a File
-In this example, we have an handler which can save an uploaded file to disk.  Please note that handler.Filename should be sanitized before passing to filepath.Join() to prevent malicious attacks. 
+In this example, we have a handler which can save an uploaded file to disk.  Please note that handler.Filename should be sanitized before passing to filepath.Join() to prevent malicious attacks. 
 
 ```go
 func postImageUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -458,7 +458,7 @@ func getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 ## Setting up Cross-Origin Resource Sharing (CORS)
 
-As for implementing CORS, the httprouter provides a convenient option to handle HTTP OPTIONS requests. router.GlobalOPTIONS can be setup as a default handler for handling pre-flight requests to the webservice.
+As for implementing CORS, the httprouter provides a convenient option to handle HTTP OPTIONS requests. router.GlobalOPTIONS can be setup as a default handler for handling preflight requests to the webservice.
 
 ```go
 func setupDefaultHttpOptions(router *httprouter.Router) {
@@ -508,7 +508,7 @@ func Cors(next httprouter.Handle) httprouter.Handle {
 ## Implementing OAuth2 with Facebook as an Alternative Way to Login
 One of the popular ways to login these days is to use one of your social media accounts. In this project, we have also explored this option and we allow a user to login with his regular username and password or Facebook login as an alternative. In order to login via Facebook, we will have to use Facebook's OAuth2. Fortunately, GoLang provides that functionality.
 
-To use Facebook's OAuth2, you will first need to setup a an app ([instructions](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par)) through the [Facebook Developer Portal](https://developers.facebook.com/).  
+To use Facebook's OAuth2, you will first need to setup an app ([instructions](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par)) through the [Facebook Developer Portal](https://developers.facebook.com/).  
 
 A regular OAuth2 Facebook Login workflow would involve a client logging in to Facebook, upon a successful login, an access token will be returned from Facebook ([workflow illustration](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par-1)). Since we don't have a web client, I have created a login endpoint and a callback endpoint to receive the access token from Facebook.
 
