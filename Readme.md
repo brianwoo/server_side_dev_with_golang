@@ -20,7 +20,7 @@ This article provides a number of examples on how these features can be implemen
 
 
 ## Dependencies:
-```
+```console
 go get github.com/julienschmidt/httprouter
 
 go get -u github.com/go-sql-driver/mysql
@@ -33,7 +33,7 @@ go get golang.org/x/oauth2
 ```
 
 ## Startup MySQL:
-```
+```console
 docker-compose -f docker_compose.yaml up -d
 ```
 
@@ -44,9 +44,9 @@ To start off, GoLang provides a router module in its stdlib, but I decided to us
 
 ### Route Setup
 
-Setting up routes is quite simple, you need to setup three things: HTTP Method, a URL and a handler method.
+Setting up routes is quite simple, you will need to setup three things: HTTP Method, a URL and a handler method.
 
-To tell httprouter the part of the URL is a Resource ID, you need to add a colon before the Resource ID variable (we have :dishId in this example).
+To tell httprouter the part of the URL is a Resource ID, you will need to add a colon before the Resource ID variable (we have :dishId in this example).
 ```go
 func SetupRoutes(router *httprouter.Router) {
 
