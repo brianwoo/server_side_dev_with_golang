@@ -268,7 +268,7 @@ func GetJwtTokenFromRequest(r *http.Request) (string, error) {
 }
 ```
 
-The jwt-go module can also parse the JWT and extract the claims. The claims (aka the payload) is usually used to store information such as a User's ID or name. However, do not include sensitive information like a password as the claims can be extracted by anyone:
+The jwt-go module can also parse the JWT and extract the claims. The claims (aka the payload) is usually used to store information such as a User's ID or name. However, do not include sensitive information like a password as the claims can be extracted by anyone ([via jwt.io](https://jwt.io)):
 
 ![Image of JWT decoded](/images/jwt_decode.png)
 
