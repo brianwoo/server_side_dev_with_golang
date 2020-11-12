@@ -465,19 +465,16 @@ func setupDefaultHttpOptions(router *httprouter.Router) {
 	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		wHeader := w.Header()
-		setAccessControlAllowOriginIfValid(r.Header, wHeader)
-		wHeader.Add("Access-Control-Allow-Credentials", "true")
-		wHeader.Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, 
-            Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
-		wHeader.Set("Access-Control-Allow-Methods", allowedMethods)
+		addAccessControlsToHeader(r.Header, wHeader)
 
 		// Adjust status code to 204
 		w.WriteHeader(http.StatusNoContent)
 	})
 }
 
-func setAccessControlAllowOriginIfValid(rHeader http.Header, wHeader http.Header) {
+func addAccessControlsToHeader(rHeader http.Header, wHeader http.Header) {
 
+	// Set Access-Control-Allow-Origin if the origin is in our allowedOrigins list
 	origin := rHeader.Get("Origin")
 	if origin != "" {
 		_, ok := allowedOrigins[origin]
@@ -485,6 +482,9 @@ func setAccessControlAllowOriginIfValid(rHeader http.Header, wHeader http.Header
 			wHeader.Add("Access-Control-Allow-Origin", origin)
 		}
 	}
+	wHeader.Add("Access-Control-Allow-Credentials", "true")
+	wHeader.Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
+	wHeader.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 }
 ```
 
@@ -494,11 +494,7 @@ func Cors(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		wHeader := w.Header()
-		setAccessControlAllowOriginIfValid(r.Header, wHeader)
-		wHeader.Add("Access-Control-Allow-Credentials", "true")
-		wHeader.Add("Access-Control-Allow-Headers", "Content-Type, Content-Length, 
-            Accept-Encoding, X-CSRF-Token, Authorization, Accept, Origin, Cache-Control, X-Requested-With")
-		wHeader.Add("Access-Control-Allow-Methods", allowedMethods)
+		addAccessControlsToHeader(r.Header, wHeader)
 
 		next(w, r, ps)
 	}

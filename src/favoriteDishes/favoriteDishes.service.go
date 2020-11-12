@@ -81,11 +81,6 @@ func postFavoriteDishes(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 	getFavoriteDishesAndReply(w, userId)
-
-	// NOTE: in NodeJS, it returns the userid and all the fav dishes
-	// statusJson, _ := misc.GetJsonFromJsonObjs(status)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Write(statusJson)
 }
 
 func deleteFavoriteDishes(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -100,11 +95,6 @@ func deleteFavoriteDishes(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 
 	getFavoriteDishesAndReply(w, userId)
-
-	// NOTE: in NodeJS, it returns the userid and all the fav dishes deleted
-	// statusJson, _ := misc.GetJsonFromJsonObjs(status)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Write(statusJson)
 }
 
 /****************************
@@ -128,7 +118,6 @@ func getFavoriteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		return
 	}
 
-	// NOTE: in NodeJS, it returns the userid and all the fav dishes
 	statusJson, _ := misc.GetJsonFromJsonObjs(status)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(statusJson)
@@ -153,10 +142,6 @@ func postFavoriteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	}
 
 	getFavoriteDishesAndReply(w, userId)
-	// NOTE: in NodeJS, it returns the userid and all the fav dishes deleted
-	// statusJson, _ := misc.GetJsonFromJsonObjs(status)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Write(statusJson)
 }
 
 func deleteFavoriteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -178,9 +163,4 @@ func deleteFavoriteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 	getFavoriteDishesAndReply(w, userId)
-
-	// NOTE: in NodeJS, it returns the userid and all the fav dish deleted
-	// statusJson, _ := misc.GetJsonFromJsonObjs(status)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Write(statusJson)
 }
