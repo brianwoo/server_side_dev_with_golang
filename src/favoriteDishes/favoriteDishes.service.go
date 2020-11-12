@@ -46,7 +46,6 @@ func getFavoriteDishesAndReply(w http.ResponseWriter, userId int64) {
 		return
 	}
 
-	// NOTE: in NodeJS, it returns the userid and all the fav dishes
 	favDishesJson, _ := misc.GetJsonFromJsonObjs(favDishes)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(favDishesJson)

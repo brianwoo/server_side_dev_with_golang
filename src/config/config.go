@@ -47,8 +47,3 @@ func (c *Config) GetConnString() string {
 
 	return connString
 }
-
-// func (c *Config) GetPublicImagesDir() string {
-
-// 	return c.BaseDir + "/" + c.PublicImagesDir
-// }

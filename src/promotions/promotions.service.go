@@ -193,7 +193,6 @@ func postPromotions(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 		return
 	}
 
-	// NOTE: in NodeJS, it returns all the promotion and comments
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(statusJson)
 }

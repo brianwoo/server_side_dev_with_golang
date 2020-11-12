@@ -37,7 +37,6 @@ func createCommentInDb(dishId int64, authorId int64, comment Comment) (*misc.Sta
 		return status, err
 	}
 
-	// TODO: In NodeJS, it returns the dish and all the comments
 	numRowsInserted, _ := results.RowsAffected()
 	status.SetStatus(numRowsInserted, 1)
 	return status, nil
@@ -55,7 +54,6 @@ func deleteCommentsFromDb(dishId int64) (*misc.Status, error) {
 		return status, err
 	}
 
-	// TODO: NodeJS returns dish and empty comments
 	numRowsDeleted, err := results.RowsAffected()
 	status.SetStatus(numRowsDeleted, 1)
 	return status, nil
@@ -75,7 +73,6 @@ func deleteCommentFromDb(dishId, commentId, updatedByUserId int64) (*misc.Status
 		return commentStatus, err
 	}
 
-	// TODO: In NodeJS, it returns dish and comments
 	numRowsDeleted, err := results.RowsAffected()
 	commentStatus.SetStatus(numRowsDeleted, 1)
 	return commentStatus, nil
@@ -133,7 +130,6 @@ func updateCommentFromDb(dishId int64, commentId int64, comment Comment, updated
 		return &Comment{}, fmt.Errorf("No rows updated")
 	}
 
-	// TODO: In NodeJS, it returns dish and comments
 	commentUpdated, err := getCommentFromDb(dishId, commentId)
 	return commentUpdated, err
 }
