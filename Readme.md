@@ -39,7 +39,7 @@ docker-compose -f docker_compose.yaml up -d
 
 ## Implementing Basic REST API
 
-To start off, GoLang provides a router module in its stdlib, but I decided to use julienschmidt's httprouter instead of GoLang's built-in module.  The reason is that julienschmidt's httprouter provides a cleaner way to implement the routes.
+To start off, GoLang provides a router module in its stdlib, but I decided to use [julienschmidt's httprouter](https://github.com/julienschmidt/httprouter) instead of GoLang's built-in module.  The reason is that julienschmidt's httprouter provides a cleaner way to implement the routes.
 
 
 ### Route Setup
@@ -253,7 +253,7 @@ func createFavoriteDishInDb(userId, dishId int64) (*misc.Status, error) {
 
 ## Implementing Authentication and JSON Web Token (JWT)
 
-The dgrijalva/jwt-go provides a simple way to generate and validate JWTs. In this example, we will extract a JWT token, stored in the Authorization field in the header:
+The [dgrijalva/jwt-go](https://github.com/dgrijalva/jwt-go) provides a simple way to generate and validate JWTs. In this example, we will extract a JWT token, stored in the Authorization field in the header:
 
 ```go
 func GetJwtTokenFromRequest(r *http.Request) (string, error) {
