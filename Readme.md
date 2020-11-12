@@ -3,7 +3,7 @@
 ## Introduction
 GoLang is a great programming language for building a Web API projects. To demonstrate the power of GoLang, I wanted to build a sample Web API project which contains some of the commonly used features.
 
-To get an idea of the features to build, I went back to one of the courses that I previously took, [Server-side Development with NodeJS, Express and MongoDB](https://www.coursera.org/learn/server-side-nodejs), offered by Coursera / Hong Kong University of Science and Technology. I decided to implement all the functionality taught in the course with GoLang and MySQL.
+To get an idea of the features to be included in the project, I went back to one of the courses that I previously took, [Server-side Development with NodeJS, Express and MongoDB](https://www.coursera.org/learn/server-side-nodejs), offered by Coursera / Hong Kong University of Science and Technology. I decided to implement all the functionality taught in the course with GoLang and MySQL.
 
 This article provide a number of examples on how these features can be implemented ([Git Repo](https://github.com/brianwoo/server_side_dev_with_golang)).
 
