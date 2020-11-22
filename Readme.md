@@ -3,7 +3,7 @@
 ## Introduction
 GoLang is a great programming language for building Web API projects. To demonstrate the power of GoLang, I wanted to build a sample Web API project which contains some of the commonly used features.
 
-To get an idea of the features to be included in the project, I went back to one of the courses that I previously took, [Server-side Development with NodeJS, Express and MongoDB](https://www.coursera.org/learn/server-side-nodejs), offered by Coursera / Hong Kong University of Science and Technology. I decided to implement all the functionality taught in the course with GoLang and MySQL.
+To get an idea of the features to be included in the project, I went back to one of the courses I previously took, [Server-side Development with NodeJS, Express and MongoDB](https://www.coursera.org/learn/server-side-nodejs), offered by Coursera / Hong Kong University of Science and Technology. I decided to implement all the functionality taught in the course with GoLang and MySQL.
 
 This article provides a number of examples on how these features can be implemented ([Git Repo](https://github.com/brianwoo/server_side_dev_with_golang)).
 
@@ -44,9 +44,9 @@ To start off, GoLang provides a router module in its stdlib, but I decided to us
 
 ### Route Setup
 
-Setting up routes is quite simple, you will need to setup three things: HTTP Method, a URL and a handler method.
+Setting up routes is quite simple, we will need to setup three things: HTTP Method, a URL and a handler method.
 
-To tell httprouter the part of the URL is a Resource ID, you will need to add a colon before the Resource ID variable (we have :dishId in this example).
+With httprouter, in order to specify a Resource ID in the URL, we will need to add a colon before the variable (we have :dishId in this example).
 ```go
 func SetupRoutes(router *httprouter.Router) {
 
@@ -162,7 +162,7 @@ func getDishFromDb(dishId int64) (*Dish, error) {
 
 ## Implementing Database CRUD Functions (with transaction)
 
-There are situations where you might need transaction support when doing multiple INSERTs. To insert a record with a transaction, we will need to use sql.Tx.ExecContext(), instead of sql.DB.ExecContext().  Fortunately, both ExecContext() functions have the same function signature and we can have setup a function to return either ExecContext() function:
+There are situations where we might need transaction support when doing multiple INSERTs. To insert a record with a transaction, we will need to use sql.Tx.ExecContext(), instead of sql.DB.ExecContext().  Fortunately, both ExecContext() functions have the same function signature and we can setup a function to return either ExecContext() function:
 ```go
 func getExecContextFunc(tx *sql.Tx) func(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
 
@@ -253,7 +253,7 @@ func createFavoriteDishInDb(userId, dishId int64) (*misc.Status, error) {
 
 ## Implementing Authentication and JSON Web Token (JWT)
 
-The [dgrijalva/jwt-go](https://github.com/dgrijalva/jwt-go) provides a simple way to generate and validate JWTs. In this example, we will extract a JWT token, stored in the Authorization field in the header:
+The [dgrijalva/jwt-go](https://github.com/dgrijalva/jwt-go) provides a simple way to generate and validate JWTs. In this example, we will look at how to extract a JWT token, stored in the Authorization field in the header:
 
 ```go
 func GetJwtTokenFromRequest(r *http.Request) (string, error) {
@@ -275,7 +275,7 @@ The jwt-go module can also parse the JWT and extract the claims. The claims (aka
 You can find out more about JWT from [this article](https://dzone.com/articles/what-is-jwt-token).
 
 ### Validating JWTs
-The claims can be extracted using the function jwt.ParseWithClaims(). The function returns the JWT token which can then be validated by looking at the token.Valid attribute.
+The claims can be extracted using the function jwt.ParseWithClaims(). The function returns the JWT token which can be validated by looking at the token.Valid attribute.
 ```go
 func validateToken(jwtToken string) (claims, bool) {
 
@@ -295,7 +295,7 @@ func validateToken(jwtToken string) (claims, bool) {
 	return *claims, true
 }
 ```
-To put this all together, we have a verifyUser() function which acts as a middleware function. This middleware function validates the user and if the user has a valid token, the next() function will be called along with claims. This next() function is the auth.VerifyAdmin() function as you will see below.
+To put this all together, the verifyUser() function acts as a middleware function. This middleware function validates the user and if the user has a valid token, the next() function will be called along with claims. This next() function is the auth.VerifyAdmin() function as shown below.
 ```go
 func VerifyUser(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -349,7 +349,7 @@ func (claims *claims) generateTokenStringForUser() (string, error) {
 ```
 
 ## Setting up HTTPS (with HTTP Redirection)
-In this project, we expose both HTTP (port 3000) and HTTPS (port 3443) to the consumers. To make things more secure, we can redirect an incoming HTTP connection to HTTPS to ensure the communication is secure.
+In this project, we expose both HTTP (port 3000) and HTTPS (port 3443) to the consumers. To make it more secure, we can redirect an incoming HTTP connection to HTTPS to ensure the communication is secure.
 ```go
 func listenOnInsecurePortAndRedirect() {
 
@@ -381,7 +381,7 @@ func listenOnSecurePort(router *httprouter.Router) {
 ```
 
 ## Uploading / Downloading Files
-File Upload and download are functionality commonly used on a web server. The following examples are to illustrate how to implement these features using GoLang.
+File upload and download are functionality commonly used on a web server. The following examples are to illustrate how to implement these features using GoLang.
 
 ### Uploading a File
 In this example, we have a handler which can save an uploaded file to disk.  Please note that handler.Filename should be sanitized before passing to filepath.Join() to prevent malicious attacks. 
@@ -422,7 +422,7 @@ func postImageUpload(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 ```
 
 ### Downloading a File
-Similarly, we have the getImage() function to handle image file download from the filesystem. Again, please note that filename should be sanitized before passing to filepath.Join() to prevent malicious attacks.
+Similarly, we have the getImage() function to handle image file downloads from the filesystem. Again, please note that filename should be sanitized before passing to filepath.Join() to prevent malicious attacks.
 ```go
 func getImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
@@ -502,11 +502,11 @@ func Cors(next httprouter.Handle) httprouter.Handle {
 ```
 
 ## Implementing OAuth2 with Facebook as an Alternative Way to Login
-One of the popular ways to login these days is to use one of your social media accounts. In this project, we have also explored this option and we allow a user to login with his regular username and password or Facebook login as an alternative. In order to login via Facebook, we will have to use Facebook's OAuth2. Fortunately, GoLang provides that functionality.
+These days, one of the popular ways to login is via your social media accounts. In this project, we have also explored this option to allow users to login with their regular username and password or Facebook login as an alternative. In order to login via Facebook, we will have to use Facebook's OAuth2. Fortunately, GoLang provides that functionality.
 
-To use Facebook's OAuth2, you will first need to setup an app ([instructions](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par)) through the [Facebook Developer Portal](https://developers.facebook.com/).  
+To use Facebook's OAuth2, we will first need to setup an app ([instructions](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par)) through the [Facebook Developer Portal](https://developers.facebook.com/).  
 
-A regular OAuth2 Facebook Login workflow would involve a client logging in to Facebook, upon a successful login, an access token will be returned from Facebook ([workflow illustration](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par-1)). Since we don't have a web client, I have created a login endpoint and a callback endpoint to receive the access token from Facebook.
+A regular OAuth2 Facebook Login workflow would involve a client logging in to Facebook, upon a successful login, an access token will be returned from Facebook ([workflow illustration](https://dzone.com/articles/implementing-oauth2-social-login-with-facebook-par-1)). Since there is no web client, I have created a login endpoint and a callback endpoint to receive the access token from Facebook.
 
 As a security precaution, it is recommended to setup a random character string in the login request and to validate that string in the callback. We can accomplish that with a state cookie.
 
@@ -612,6 +612,6 @@ func findUserByFacebookIdCreateIfNotFound(facebookUserInfo FacebookUserInfo) (*a
 ```
 
 ## Conclusion
-GoLang is a great programming language to create a Web API and there are a number of helpful modules which make building a project much easier. 
+GoLang is a powerful programming language to create a Web API and there are a number of helpful modules which make building a project much easier. 
 
 In this project, I have demonstrated how quickly it is to build a Web API with some of the commonly used features in GoLang.
