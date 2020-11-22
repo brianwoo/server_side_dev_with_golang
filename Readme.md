@@ -68,7 +68,7 @@ A httprouter handler interface looks very much like GoLang's http handler interf
 ```go
 func deleteDish(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-    // The :dishId specified in the routing
+	// The :dishId specified in the routing
 	dishId := ps.ByName("dishId")
 	dishIdInt, err := misc.GetInt64FromString(dishId)
 	if err != nil {
